@@ -26,7 +26,7 @@ function tray(){
 $('#tabs').innerHTML=TIPOS.map(t=>`<button class="tb ${t===tipo?'on':''}" data-tp="${t}"><i>${INFO[t][0]}</i><b>${t}</b><small>${TRAY.filter(x=>x.tipo===t).length} publicados</small></button>`).join('');
 $('#panel').innerHTML=`<h3>${INFO[tipo][1]}</h3><p>${INFO[tipo][2]} Filtra por categoría:</p><div class="chips">${['Todos',...CATS].map(c=>`<button class="chip ${c===CAT[tipo]?'on':''}" data-ct="${c}">${c}</button>`).join('')}</div><div class="grid" id="gT"></div>`;
 const cat=CAT[tipo];const L=TRAY.filter(i=>i.tipo===tipo&&(cat==='Todos'||i.cat===cat));
-$('#gT').innerHTML=L.length?L.map(i=>`<article class="card">${i.img?`<img src="${i.img}" alt="${i.titulo}">`:''}<div class="tag">${i.cat}</div><h3>${i.titulo}</h3><small>${i.fecha?fmt(i.fecha):''}${i.lugar?' · '+i.lugar:''}</small></article>`).join(''):empty('Aquí compartiremos nuestras '+tipo.toLowerCase()+(cat!=='Todos'?' de '+cat:'')+'.');}
+$('#gT').innerHTML=L.length?L.map(i=>`<article class="card">${i.video?`<div class="vid" data-v="${i.video}"><img src="https://i.ytimg.com/vi/${i.video}/hqdefault.jpg" alt="${i.titulo}"><span class="play">▶</span></div>`:i.img?`<img src="${i.img}" alt="${i.titulo}">`:''}<div class="tag">${i.cat}</div><h3>${i.titulo}</h3><small>${i.fecha?fmt(i.fecha):''}${i.lugar?' · '+i.lugar:''}</small></article>`).join(''):empty('Aquí compartiremos nuestras '+tipo.toLowerCase()+(cat!=='Todos'?' de '+cat:'')+'.');}
 $('#trayectoria').addEventListener('click',e=>{const a=e.target.closest('[data-tp]'),b=e.target.closest('[data-ct]');if(a)tipo=a.dataset.tp;if(b)CAT[tipo]=b.dataset.ct;if(a||b)tray()});
 // Calendario de ensayos
 const D=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],ON=[0,2,4];
@@ -40,3 +40,4 @@ draw();tray();cump();tick();
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));
 addEventListener('scroll',()=>{const s=document.querySelector('.sun');if(s)s.style.top=(-120+scrollY*.25)+'px'},{passive:true});
+document.addEventListener('click',e=>{const v=e.target.closest('.vid[data-v]');if(!v)return;v.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.dataset.v}?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen></iframe>`;v.removeAttribute('data-v')});
